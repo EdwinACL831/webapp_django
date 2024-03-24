@@ -9,18 +9,24 @@ def post_list_and_create(request):
     qs = Post.objects.all()
     return render(request, 'posts/main.html', {'qs':qs})
 
-def load_post_data_view(request):
+def load_post_data_view(request, numb_of_posts):
+    visible = 3
+    upper = numb_of_posts
+    lower = upper - visible
     qs = Post.objects.all()
+    size = qs.count()
+
     data = []
     for obj in qs:
         item = {
             'id': obj.id,
             'title': obj.title,
             'content': obj.content,
+            'liked': True if request.user in obj.liked.all() else False,
             'author': obj.author.user.username,
         }
         data.append(item)
-    return JsonResponse({'data': data})
+    return JsonResponse({'data': data[lower:upper], 'size': size})
 
 def hello_word_view(request):
     return JsonResponse({'text': 'Hello World'})

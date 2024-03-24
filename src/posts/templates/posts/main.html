@@ -13,9 +13,11 @@ posts
     {% comment %}{% for obj in qs %}
         {{obj.title}} - {{obj.content}} <br>
     {% endfor %}{% endcomment %}
-    <div id="spinner-container">
+    <div id="post-container"></div>
+    <div id="spinner-container" class="text-center">
         <div class="spinner-border" role="status"></div>
     </div>
-    <div id="post-container"></div>
-    <div id="hello-word"></div>
+    <div class="text-center mb-3" id="end-container">
+        <button class="btn btn-primary" id="load-btn">Load More</button>
+    </div>
 {% endblock content %}
