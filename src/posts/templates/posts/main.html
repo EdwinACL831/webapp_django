@@ -13,6 +13,9 @@ posts
     {% comment %}{% for obj in qs %}
         {{obj.title}} - {{obj.content}} <br>
     {% endfor %}{% endcomment %}
+    <div id="spinner-container">
+        <div class="spinner-border" role="status"></div>
+    </div>
     <div id="post-container"></div>
     <div id="hello-word"></div>
 {% endblock content %}

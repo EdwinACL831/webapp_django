@@ -1,6 +1,7 @@
 console.log("Hello World");
 const hello_world_box = document.getElementById("hello-word");
-const post_container = document.getElementById("post-container");
+const postContainer = document.getElementById("post-container");
+const spinnerContainer = document.getElementById("spinner-container");
 
 $.ajax({
     type: 'GET',
@@ -19,8 +20,9 @@ $.ajax({
         // data = JSON.parse(response);
         console.log('success', response);
         const data = response.data;
+        spinnerContainer.classList.add("not-visible");
         data.forEach(element => {
-            post_container.innerHTML += `
+            postContainer.innerHTML += `
                 ${element.title} - <b>${element.content}</b> <br>
             `
         });
