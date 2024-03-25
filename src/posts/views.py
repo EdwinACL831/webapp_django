@@ -29,5 +29,22 @@ def load_post_data_view(request, numb_of_posts):
         data.append(item)
     return JsonResponse({'data': data[lower:upper], 'size': size})
 
+def like_unlike_posts(request):
+    # this is the "new" way to check for the AJAX request method
+    # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        pk = request.POST.get('pk')
+        obj = Post.objects.get(pk=pk)
+        if request.user in obj.liked.all():
+            liked = False
+            obj.liked.remove(request.user)
+        else:
+            liked = True
+            obj.liked.add(request.user)
+        
+        return JsonResponse({'liked': liked, 'count': obj.like_count})
+    else:
+        print('no ajax request')
+
 def hello_word_view(request):
     return JsonResponse({'text': 'Hello World'})

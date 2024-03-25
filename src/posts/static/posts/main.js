@@ -4,6 +4,47 @@ const spinnerContainer = document.getElementById("spinner-container");
 const loadBtn = document.getElementById("load-btn");
 const endContainer = document.getElementById("end-container");
 
+const getCookie = (name) => {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+const likeUnlikePosts = () => {
+    const likeUnlikeForms = [...document.getElementsByClassName("like-unlike-form")];
+    likeUnlikeForms.forEach(form => form.addEventListener("submit", e => {
+        e.preventDefault();
+        const formId = e.target.getAttribute("data-form-id");
+        const likeUnlikeBtn = document.getElementById(`like-unlike-${formId}`);
+
+        $.ajax({
+            type: "POST",
+            url: "/like-unlike/",
+            headers: {'X-Requested-With': 'XMLHttpRequest'}, // this header is necessary because is how we know it comes from AJAX
+            data: {
+                "csrfmiddlewaretoken": csrftoken,
+                "pk": formId,
+            },
+            success: (response) => { 
+                console.log(response);
+                likeUnlikeBtn.textContent = response.liked ? `Unlike (${response.count})` : `Like (${response.count})`
+            },
+            error: (err) => { console.log(err); }
+        })
+    }))
+}
+
 let numbOfPosts = 3;
 
 const getData = () => {
@@ -27,7 +68,9 @@ const getData = () => {
                                 <a href="#" class="btn btn-primary">Details</a>                    
                             </div>
                             <div class="col-2">
-                                <a href="#" class="btn btn-primary">${element.liked ? `Unlike (${element.count})` : `Like (${element.count})`}</a>                    
+                                <form class="like-unlike-form" data-form-id="${element.id}">
+                                    <button href="#" class="btn btn-primary" id="like-unlike-${element.id}">${element.liked ? `Unlike (${element.count})` : `Like (${element.count})`}</button>                    
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -35,6 +78,7 @@ const getData = () => {
                 `
             });
 
+            likeUnlikePosts();
             console.log('size', response.size);
             console.log({numbOfPosts});
             if(response.size === 0) {
