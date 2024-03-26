@@ -2,6 +2,7 @@ const backBtn = document.getElementById("back-btn");
 const updateBtn = document.getElementById("update-btn");
 const deleteBtn = document.getElementById("delete-btn");
 const spinnerContainer = document.getElementById("spinner-container");
+const postContainer = document.getElementById("post-container");
 
 const url = window.location.href + "data/"
 
@@ -24,6 +25,18 @@ $.ajax({
             updateBtn.classList.remove("not-visible");
             deleteBtn.classList.remove("not-visible");
         }
+
+        const titleEl = document.createElement("h3");
+        titleEl.setAttribute("class", "mt-3");
+
+        const contentEl = document.createElement("p");
+        contentEl.setAttribute("class", "mt-1");
+
+        titleEl.textContent = data.title;
+        contentEl.textContent = data.content;
+
+        postContainer.appendChild(titleEl);
+        postContainer.appendChild(contentEl);        
     },
     error: (err) => {
         console.log(err);
