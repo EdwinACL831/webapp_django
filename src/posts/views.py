@@ -10,7 +10,9 @@ def post_list_and_create(request):
     form = PostForm(request.POST or None)
     # we define a query set
     # qs = Post.objects.all()
-
+    
+    # this is the "new" way to check for the AJAX request method
+    # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if form.is_valid():
             author = Profile.objects.get(user=request.user)
@@ -92,6 +94,27 @@ def like_unlike_posts(request):
         return JsonResponse({'liked': liked, 'count': obj.like_count})
     else:
         print('no ajax request')
+        
+def update_post(request, pk):
+    obj = Post.objects.get(pk=pk)
+    # this is the "new" way to check for the AJAX request method
+    # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        new_title = request.POST.get('title')
+        new_content = request.POST.get('content')
+        obj.title = new_title
+        obj.content = new_content
+        obj.save()
 
-def hello_word_view(request):
-    return JsonResponse({'text': 'Hello World'})
+    return JsonResponse({
+        'title': new_title,
+        'content': new_content,
+    })
+
+def delete_post(request, pk):
+    obj = Post.objects.get(pk=pk)
+    # this is the "new" way to check for the AJAX request method
+    # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        obj.delete()
+    return JsonResponse({})
