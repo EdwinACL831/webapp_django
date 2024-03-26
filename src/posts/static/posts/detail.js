@@ -79,5 +79,24 @@ updateForm.addEventListener("submit", e =>{
         error: err => {
             console.log(err);
         }
+    });
+})
+
+deleteForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    $.ajax({
+        type: "POST",
+        url: deleteUrl,
+        data: {
+            "csrfmiddlewaretoken": csrfToken[0].value,
+        },
+        success: response => {
+            window.location.href = window.location.origin;
+            localStorage.setItem("title", titleInput.value);
+        },
+        error: err => {
+            console.log(err);
+        }
     })
 })
