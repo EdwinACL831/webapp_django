@@ -17,6 +17,12 @@ def post_list_and_create(request):
             instance = form.save(commit=False)
             instance.author = author
             instance.save()
+            return JsonResponse({
+                'title': instance.title,
+                'content': instance.content,
+                'author': instance.author.user.username,
+                'id': instance.id,
+            })
 
     context = {
         'form': form,

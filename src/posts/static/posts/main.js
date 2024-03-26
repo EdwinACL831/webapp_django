@@ -3,6 +3,11 @@ const postContainer = document.getElementById("post-container");
 const spinnerContainer = document.getElementById("spinner-container");
 const loadBtn = document.getElementById("load-btn");
 const endContainer = document.getElementById("end-container");
+const postForm = document.getElementById("post-form");
+const title = document.getElementById("id_title");
+const content = document.getElementById("id_content");
+
+const csrfCreatePostToken = document.getElementsByName("csrfmiddlewaretoken");
 
 const getCookie = (name) => {
     let cookieValue = null;
@@ -97,6 +102,25 @@ loadBtn.addEventListener("click", () => {
     spinnerContainer.classList.remove("not-visible");
     numbOfPosts += 3;
     getData();
+});
+
+postForm.addEventListener("submit", e => {
+    e.preventDefault();
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: {
+            "csrfmiddlewaretoken": csrfCreatePostToken[0].value,
+            "title": title.value,
+            "content": content.value,
+        },
+        success: (response) => {
+            console.log(response);
+        },
+        error: (err) => {
+            console.log(err);
+        }
+    })
 });
 
 getData();
