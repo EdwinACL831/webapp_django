@@ -4,9 +4,11 @@ from .models import Post, Photo
 from .forms import PostForm
 from profiles.models import Profile
 from .utils import action_permision
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+@login_required
 def post_list_and_create(request):
     form = PostForm(request.POST or None)
     # we define a query set
@@ -46,6 +48,7 @@ def post_detail(request, pk):
     return render(request, 'posts/detail.html', context)
 
 
+@login_required
 def load_post_data_view(request, numb_of_posts):
     visible = 3
     upper = numb_of_posts
@@ -66,7 +69,7 @@ def load_post_data_view(request, numb_of_posts):
         data.append(item)
     return JsonResponse({'data': data[lower:upper], 'size': size})
 
-
+@login_required
 def post_detail_data_view(request, pk):
     obj = Post.objects.get(pk=pk)
     data = {
@@ -79,6 +82,7 @@ def post_detail_data_view(request, pk):
 
     return JsonResponse({'data': data})
 
+@login_required
 def like_unlike_posts(request):
     # this is the "new" way to check for the AJAX request method
     # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
@@ -95,7 +99,9 @@ def like_unlike_posts(request):
         return JsonResponse({'liked': liked, 'count': obj.like_count})
     else:
         print('no ajax request')
-        
+
+@login_required
+@action_permision
 def update_post(request, pk):
     obj = Post.objects.get(pk=pk)
     # this is the "new" way to check for the AJAX request method
@@ -112,6 +118,7 @@ def update_post(request, pk):
         'content': new_content,
     })
 
+@login_required
 @action_permision
 def delete_post(request, pk):
     obj = Post.objects.get(pk=pk)
