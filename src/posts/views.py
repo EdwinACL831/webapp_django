@@ -3,6 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from .models import Post, Photo
 from .forms import PostForm
 from profiles.models import Profile
+from .utils import action_permision
 
 # Create your views here.
 
@@ -111,6 +112,7 @@ def update_post(request, pk):
         'content': new_content,
     })
 
+@action_permision
 def delete_post(request, pk):
     obj = Post.objects.get(pk=pk)
     # this is the "new" way to check for the AJAX request method
