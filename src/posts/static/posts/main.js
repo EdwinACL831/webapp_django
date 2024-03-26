@@ -9,6 +9,7 @@ const content = document.getElementById("id_content");
 const alertContainer = document.getElementById("alert-container");
 
 const csrfCreatePostToken = document.getElementsByName("csrfmiddlewaretoken");
+const url = window.location.href;
 
 const getCookie = (name) => {
     let cookieValue = null;
@@ -71,7 +72,7 @@ const getData = () => {
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-2">
-                                <a href="#" class="btn btn-primary">Details</a>                    
+                                <a href="${url}${element.id}" class="btn btn-primary">Details</a>                    
                             </div>
                             <div class="col-2">
                                 <form class="like-unlike-form" data-form-id="${element.id}">

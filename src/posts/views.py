@@ -30,6 +30,19 @@ def post_list_and_create(request):
 
     return render(request, 'posts/main.html', context)
 
+
+def post_detail(request, pk):
+    obj = Post.objects.get(pk=pk)
+    form = PostForm()
+
+    context = {
+        'obj': obj,
+        'form': form,
+    }
+
+    return render(request, 'posts/detail.html', context)
+
+
 def load_post_data_view(request, numb_of_posts):
     visible = 3
     upper = numb_of_posts
