@@ -3,6 +3,8 @@ const updateBtn = document.getElementById("update-btn");
 const deleteBtn = document.getElementById("delete-btn");
 const spinnerContainer = document.getElementById("spinner-container");
 const postContainer = document.getElementById("post-container");
+const titleInput = document.getElementById("id_title");
+const contentInput = document.getElementById("id_content");
 
 const url = window.location.href + "data/"
 
@@ -36,7 +38,10 @@ $.ajax({
         contentEl.textContent = data.content;
 
         postContainer.appendChild(titleEl);
-        postContainer.appendChild(contentEl);        
+        postContainer.appendChild(contentEl);
+        
+        titleInput.value = data.title;
+        contentInput.value = data.content;
     },
     error: (err) => {
         console.log(err);
