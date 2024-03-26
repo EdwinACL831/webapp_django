@@ -36,6 +36,7 @@ def post_list_and_create(request):
     return render(request, 'posts/main.html', context)
 
 
+@login_required
 def post_detail(request, pk):
     obj = Post.objects.get(pk=pk)
     form = PostForm()
