@@ -15,9 +15,9 @@ const url = window.location.href + "data/"
 const updateUrl = window.location.href + "update/"
 const deleteUrl = window.location.href + "delete/"
 
-backBtn.addEventListener("click", () => {
-    history.back();
-})
+// backBtn.addEventListener("click", () => {
+//    history.back();
+// })
 
 $.ajax({
     type: "GET",
