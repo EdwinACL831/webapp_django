@@ -63,6 +63,19 @@ def load_post_data_view(request, numb_of_posts):
         data.append(item)
     return JsonResponse({'data': data[lower:upper], 'size': size})
 
+
+def post_detail_data_view(request, pk):
+    obj = Post.objects.get(pk=pk)
+    data = {
+        'id': obj.id,
+        'title': obj.title,
+        'content': obj.content,
+        'author': obj.author.user.username,
+        'logged_in': request.user.username,
+    }
+
+    return JsonResponse({'data': data})
+
 def like_unlike_posts(request):
     # this is the "new" way to check for the AJAX request method
     # instead of request.is_ajax() -> https://docs.djangoproject.com/en/4.0/releases/3.1/#id2
