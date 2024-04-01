@@ -129,6 +129,7 @@ def delete_post(request, pk):
         obj.delete()
     return JsonResponse({})
 
+@login_required
 def image_upload_view(request):
     if request.method == 'POST':
         img = request.FILES.get('file')
