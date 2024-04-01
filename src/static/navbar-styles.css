@@ -1,0 +1,29 @@
+.option {
+    color: white;
+    &:hover {
+        color: wheat;
+    }
+}
+
+.option-clicked {
+    color: wheat;
+}
+
+/*#home-link {
+    color: white;
+    &:hover {
+        color: wheat;
+    }
+}
+
+#profile-link {
+    color: white;
+    &:hover {
+        color: wheat;
+    }
+}*/
+
+#navbar-container {
+    background-color: black;
+}
+

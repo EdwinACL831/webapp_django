@@ -190,3 +190,18 @@ const myDropzone = new Dropzone("#my-dropzone", {
 })
 
 getData();
+
+const onClickHandler = (event) => {
+    const btnId = event ? event.target.id : "home-link";
+    navbarBtnIds.forEach(id => {
+        const btn = document.getElementById(id);
+        if(id === btnId) {
+            btn.classList.add("option-clicked");
+        } else {
+            btn.classList.remove("option-clicked");
+        }
+    })
+}
+
+navbarHomeBtn.addEventListener("click", onClickHandler);
+onClickHandler(null);
