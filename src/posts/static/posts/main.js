@@ -1,7 +1,11 @@
 console.log("Hello World");
+const HIDE_OPERATION = "hide";
+const LOAD_OPERATION = "load";
+
 const postContainer = document.getElementById("post-container");
 const spinnerContainer = document.getElementById("spinner-container");
 const loadBtn = document.getElementById("load-btn");
+const hideBtn = document.getElementById("hide-btn");
 const endContainer = document.getElementById("end-container");
 const postForm = document.getElementById("post-form");
 const title = document.getElementById("id_title");
@@ -61,58 +65,78 @@ const likeUnlikePosts = () => {
 }
 
 let numbOfPosts = 3;
+let previousPostHTMLs = [];
+hideBtn.disabled = true;
 
-const getData = () => {
+const getData = (operation) => {
     $.ajax({
         type: 'GET',
         url: `/data/${numbOfPosts}`,
         success: (response) => {
-            console.log('success', response);
             const data = response.data;
             spinnerContainer.classList.add("not-visible");
-            data.forEach(element => {
-                postContainer.innerHTML += `
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <h5 class="card-title">${element.title}</h5>
-                        <p class="card-text">${element.content}</p>
-                    </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-2">
-                                <a href="${url}${element.id}" class="btn btn-primary">Details</a>                    
-                            </div>
-                            <div class="col-2">
-                                <form class="like-unlike-form" data-form-id="${element.id}">
-                                    <button class="btn btn-primary" id="like-unlike-${element.id}">${element.liked ? `Unlike (${element.count})` : `Like (${element.count})`}</button>                    
-                                </form>
+            if(operation === HIDE_OPERATION) {
+                postContainer.innerHTML = previousPostHTMLs.pop();
+            } else {
+                previousPostHTMLs.push(postContainer.innerHTML)
+                data.forEach(element => {
+                    postContainer.innerHTML += `
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <h5 class="card-title">${element.title}</h5>
+                            <p class="card-text">${element.content}</p>
+                        </div>
+                        <div class="card-footer">
+                            <div class="row">
+                                <div class="col-2">
+                                    <a href="${url}${element.id}" class="btn btn-primary">Details</a>                    
+                                </div>
+                                <div class="col-2">
+                                    <form class="like-unlike-form" data-form-id="${element.id}">
+                                        <button class="btn btn-primary" id="like-unlike-${element.id}">${element.liked ? `Unlike (${element.count})` : `Like (${element.count})`}</button>                    
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                `
-            });
+                    `
+                });
 
-            likeUnlikePosts();
-            console.log('size', response.size);
-            console.log({numbOfPosts});
-            if(response.size === 0) {
-                endContainer.textContent = "No posts added yet...";
-            } else if(response.size <= numbOfPosts) {
-                loadBtn.classList.add("not-visible");
-                endContainer.textContent = "No more posts to load...";
+                likeUnlikePosts();
+                if(response.size === 0) {
+                    endContainer.textContent = "No posts added yet...";
+                } else if(response.size <= numbOfPosts) {
+                    loadBtn.classList.add("not-visible");
+                    endContainer.textContent = "No more posts to load...";
+                }
             }
-    
+
+            if(previousPostHTMLs.length <= 1) {
+                hideBtn.disabled = true;
+            } else {
+                hideBtn.disabled = false;   
+            }
+            console.log({previousPostHTMLs});
         },
         error: (err) => { console.log('error', err); },
-    })
+    });
 }
 
 loadBtn.addEventListener("click", () => {
     spinnerContainer.classList.remove("not-visible");
     numbOfPosts += 3;
-    getData();
+    getData(LOAD_OPERATION);
 });
+
+hideBtn.addEventListener("click", () => {
+    if(previousPostHTMLs.length > 1) {
+        numbOfPosts -= 3;
+        getData(HIDE_OPERATION);
+    } else {
+        hideBtn.disabled = true;
+        console.log("cannot hide more");
+    }
+})
 
 
 let newPostId = null;
@@ -189,7 +213,7 @@ const myDropzone = new Dropzone("#my-dropzone", {
     acceptedFiles: ".png, .jpg, .jpeg"
 })
 
-getData();
+getData(LOAD_OPERATION);
 
 const onClickHandler = (event) => {
     const btnId = event ? event.target.id : "home-link";
